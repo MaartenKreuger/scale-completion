@@ -1,0 +1,69 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmhealth_completion() {
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'node cluster event thresholds config'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case ${COMP_WORDS[1]} in
+         node) COMPREPLY=($(compgen -W 'show eventlog'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         cluster) COMPREPLY=($(compgen -W 'show'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         event) COMPREPLY=($(compgen -W 'show list hide unhide'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         thresholds) COMPREPLY=($(compgen -W 'show list add delete'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         config) COMPREPLY=($(compgen -W 'interval'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case ${COMP_WORDS[1]} in
+         node) case ${COMP_WORDS[2]} in
+                 show) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                          -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          *) COMPREPLY=($(compgen -W '[component] -N -Y --verbose --unhealthy --color --nocolor --resync'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       esac;;
+                 eventlog) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                            -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            *) COMPREPLY=($(compgen -W '-N -Y --verbose --hour --day --week --month --clear --show-state-changes --color --nocolor'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                 *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                esac;;
+         cluster)  case ${COMP_WORDS[2]} in
+                      show) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              *) COMPREPLY=($(compgen -W '[component] -N -Y --verbose --unhealthy --color --nocolor'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                   *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+               esac;;
+         event) case ${COMP_WORDS[2]} in
+                  list) COMPREPLY=($(compgen -W 'HIDDEN' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  hide) COMPREPLY=($(compgen -W 'EventName EntityName' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  unhide) COMPREPLY=($(compgen -W 'EventName EntityName' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  show) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                          -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          *) COMPREPLY=($(compgen -W '-N EventName EventID' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       esac;;
+                   *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                esac;;
+         thresholds) case ${COMP_WORDS[2]} in
+                       list) COMPREPLY=($(compgen -W '--verbose' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       delete) COMPREPLY=($(compgen -W 'ruleName all' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       add) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              metric) COMPREPLY=($(compgen -W 'measurement' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --errorlevel) COMPREPLY=($(compgen -W 'threshold-error-limit' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --warnlevel) COMPREPLY=($(compgen -W 'threshold-warn-limit' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --direction) COMPREPLY=($(compgen -W 'high low' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --sensitivity) COMPREPLY=($(compgen -W 'bucketsize' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --hysteresis) COMPREPLY=($(compgen -W 'percentage' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --name) COMPREPLY=($(compgen -W 'ruleName' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --errormsg) COMPREPLY=($(compgen -W 'user-defined-action-description' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --warnmsg) COMPREPLY=($(compgen -W 'user-defined-action-description' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *)  COMPREPLY=($(compgen -W 'metric --errorlevel --warnlevel --direction --sensitivity --hysteresis--name --errormsg --warnmsg' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                        *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                      esac;;
+         config) COMPREPLY=($(compgen -W 'OFF LOW MEDIUM DEFAULT HIGH' -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+  esac
+}
+complete -F _mmhealth_completion mmhealth
