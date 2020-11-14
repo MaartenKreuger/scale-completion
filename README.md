@@ -8,4 +8,4 @@ Where possible options are filled in with valid responses or GPFS objects
 
 All files should be copied to the /etc/bash_completion.d folder:<BR>
 git clone https://github.com/MaartenKreuger/scale-completion<BR>
-cp scale-completion/* /etc/bash_completion.d<br>
+cp scale-completion/mm* /etc/bash_completion.d<br>
