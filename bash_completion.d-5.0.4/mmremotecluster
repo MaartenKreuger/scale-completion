@@ -1,0 +1,47 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmremotecluster_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'add update delete show' -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case ${COMP_WORDS[1]} in
+          add) if [ $COMP_CWORD -eq 2 ] 
+                  then 
+                      COMPREPLY=($(compgen -W 'RemoteClusterName' -- "${COMP_WORDS[COMP_CWORD]}"))
+                  else 
+                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        -k) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                        -n) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                        *) COMPREPLY=($(compgen -W '-k -n' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac
+                  fi;;
+          update) if [ $COMP_CWORD -eq 2 ]
+                  then
+                      COMPREPLY=($(compgen -W "$(_remote_clusters)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                  else
+                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        -k) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;          
+                        -n) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                        -C) COMPREPLY=($(compgen -W "NewClusterName" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                        *) COMPREPLY=($(compgen -W '-k -n -C' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac
+                  fi;;
+          delete) COMPREPLY=($(compgen -W "$(_remote_clusters) all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          show) if [ $COMP_CWORD -eq 2 ]
+                  then
+                      COMPREPLY=($(compgen -W "$(_remote_clusters) all" -- "${COMP_WORDS[COMP_CWORD]}"))
+                  else
+                      COMPREPLY=($(compgen -W '-Y' -- "${COMP_WORDS[COMP_CWORD]}"))
+                  fi;;
+          *) COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[1]}" -- "${COMP_WORDS[COMP_CWORD]}"));;  
+     esac;;
+  esac
+}
+complete -F _mmremotecluster_completion mmremotecluster

@@ -1,0 +1,25 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmimgrestore_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_fs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -g) COMPREPLY=($(compgen -f -o dirnames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -L) COMPREPLY=($(compgen -W "0 1 2 3 4 5 6" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --image) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --qos) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '-g -L -N --image --qos' -- "${COMP_WORDS[COMP_CWORD]}"));;
+     esac;;
+  esac
+}
+complete -F _mmimgrestore_completion mmimgrestore

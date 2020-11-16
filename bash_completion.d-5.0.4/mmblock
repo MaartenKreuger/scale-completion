@@ -1,0 +1,70 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmblock_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'host volume map-volume'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case "${COMP_WORDS[1]}" in
+         host) COMPREPLY=($(compgen -W 'list add change remove'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         volume) COMPREPLY=($(compgen -W 'list add remove'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         map-volume) COMPREPLY=($(compgen -W 'list add remove'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case "${COMP_WORDS[1]}" in
+          host) case "${COMP_WORDS[2]}" in
+                     list) COMPREPLY=($(compgen -W "-Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     add) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;         
+                              --iscsi-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;         
+                              *) COMPREPLY=($(compgen -W "-H -i --host-alias --iscsi-name"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                     change) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              -c|--chap-secret) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "-H --host-alias -n --no-chap-secret -c --chap-secret"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                     remove) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "-H --host-alias"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                  esac;;
+          volume) case "${COMP_WORDS[2]}" in
+                     list) COMPREPLY=($(compgen -W "-Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     add) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              -v|--volume-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              -f|--file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "-H --host-alias -v --volume-name -f --file-path"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                     remove) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              -v|--volume-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "-v --volume-name"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                  esac;;
+          map-volume) case "${COMP_WORDS[2]}" in
+                        list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "-H --host-alias -a --all -f --file -Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+                        add) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                -v|--volume-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                -l|--lun) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "-H --host-alias -v --volume-name -l --lun"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                        remove) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  -H|--host-alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  -v|--volume-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "-H --host-alias -v --volume-name"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                esac;;
+                       esac;;
+       esac;;
+  esac
+}
+complete -F _mmblock_completion mmblock

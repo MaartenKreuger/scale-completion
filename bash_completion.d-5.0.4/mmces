@@ -1,0 +1,136 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmces_completion() {
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'service node log address state events'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case ${COMP_WORDS[1]} in
+         service) COMPREPLY=($(compgen -W 'enable disable start stop list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         node) COMPREPLY=($(compgen -W 'suspend resume list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         log) COMPREPLY=($(compgen -W 'level'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         address) COMPREPLY=($(compgen -W 'add remove move change list policy'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         state) COMPREPLY=($(compgen -W 'show cluster'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         events) COMPREPLY=($(compgen -W 'active list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case ${COMP_WORDS[1]} in
+         service) case ${COMP_WORDS[2]} in
+                    enable) COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    disable) if [ $COMP_CWORD -eq 3 ]
+                             then
+                                COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK" -- "${COMP_WORDS[COMP_CWORD]}"))
+                             else
+                                COMPREPLY=($(compgen -W "--force" -- "${COMP_WORDS[COMP_CWORD]}"))
+                             fi;;
+                    start) if [ $COMP_CWORD -eq 3 ]
+                           then
+                              COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK" -- "${COMP_WORDS[COMP_CWORD]}"))
+                           else
+                              case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                -N) COMPREPLY=($(compgen -W "$(_ces_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "-N -a" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac
+                           fi;;
+                    list) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "$(_ces_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N -a --verbose" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                   esac;;
+         node)  case "${COMP_WORDS[2]}" in
+                    suspend) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "-N -a --stop" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    resume) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "-N -a --start" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    list) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --ces-group) COMPREPLY=($(compgen -W "$(_ces_groups)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "--ces-group --verbose" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                esac;;
+         log)   case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                   level) COMPREPLY=($(compgen -W "0 1 2 3" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   *) COMPREPLY=($(compgen -W "level" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                esac;;
+         address) case ${COMP_WORDS[2]} in
+                    add)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --ces-node) COMPREPLY=($(compgen -W "$(_ces_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --attribute) COMPREPLY=($(compgen -W "object_database_node object_singleton_node" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-group) COMPREPLY=($(compgen -W "$(_ces_groups)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-ip) COMPREPLY=($(compgen -W "IP1 IP2" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W '--ces-node --attribute --ces-group --ces-ip' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                    remove)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --ces-ip) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W '--ces-ip' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                    move)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --ces-node) COMPREPLY=($(compgen -W "$(_ces_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-ip) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --rebalance) return 0;;
+                                *) COMPREPLY=($(compgen -W '--ces-ip --ces-node --rebalance' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                    change)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --attribute) COMPREPLY=($(compgen -W "object_database_node object_singleton_node" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-group) COMPREPLY=($(compgen -W "$(_ces_groups)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-ip) COMPREPLY=($(compgen -W "$(_ces_ips)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W '--ces-node --attribute --remove-attribute --remove-group --ces-group --ces-ip' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                    list)    case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --attribute) COMPREPLY=($(compgen -W "object_database_node object_singleton_node" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-group) COMPREPLY=($(compgen -W "$(_ces_groups)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --ces-ip) COMPREPLY=($(compgen -W "$(_ces_ips)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W '--attribute --ces-group --ces-ip --by-node --extended-list --full-list' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                    policy) COMPREPLY=($(compgen -W 'none balanced-load node-affinity even-coverage' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+            state) case ${COMP_WORDS[2]} in
+                      show) if [ $COMP_CWORD -eq 3 ]
+                             then
+                                COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK BLOCK AUTH AUTH_OBJ NETWORK CES" -- "${COMP_WORDS[COMP_CWORD]}"))
+                             else
+                                case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                   -N) COMPREPLY=($(compgen -W "$(_ces_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   *) COMPREPLY=($(compgen -W '-N -a' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                esac
+                             fi;;
+                      cluster) COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK BLOCK AUTH AUTH_OBJ NETWORK CES" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                      *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   esac;;
+            events)  case ${COMP_WORDS[2]} in
+                        active) if [ $COMP_CWORD -eq 3 ]
+                                then
+                                   COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK BLOCK AUTH AUTH_OBJ NETWORK" -- "${COMP_WORDS[COMP_CWORD]}"))
+                                else
+                                   case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                     -N) COMPREPLY=($(compgen -W "$(_ces_nodes;_node_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W '-N -a' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   esac
+                                fi;;
+                         list) if [ $COMP_CWORD -eq 3 ]
+                               then
+                                  COMPREPLY=($(compgen -W "NFS OBJ SMB BLOCK BLOCK AUTH AUTH_OBJ NETWORK" -- "${COMP_WORDS[COMP_CWORD]}"))
+                               else
+                                  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                     -N) COMPREPLY=($(compgen -W "$(_ces_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --time) COMPREPLY=($(compgen -W 'hour day week month' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --severity) COMPREPLY=($(compgen -W 'INFO WARNING ERROR SEVERE' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W '-N -a --time --severity' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac
+                               fi;;
+                          *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac;;
+       esac;;
+  esac
+}
+complete -F _mmces_completion mmces
