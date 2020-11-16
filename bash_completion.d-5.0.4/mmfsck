@@ -1,0 +1,24 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmfsck_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    *)  case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --threads) COMPREPLY=($(compgen -W "16 32 64" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --qos) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --patch-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -t) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '-n -y --patch --patch-file -c  -m  -o --skip-inode-check --skip-directory-check -s  -v  -V -t --threads --estimate-only --use-stale-replica --qos -N --status-report' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        esac;;
+  esac
+}
+complete -F _mmfsck_completion mmfsck

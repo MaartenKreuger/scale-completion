@@ -1,0 +1,27 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmexpelnode_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "-o --once -l --list -r --reset" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[1]}" in
+          -o|--once) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                       -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       *) COMPREPLY=($(compgen -W '-f -N -w --wait --is-fenced' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac;;
+          -l|--list) return 0;;
+          -r|--reset) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                         -N) COMPREPLY=($(compgen -W "$(_nodes) all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                         *) COMPREPLY=($(compgen -W '-N' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                      esac;;
+       esac;;
+  esac
+}
+complete -F _mmexpelnode_completion mmexpelnode

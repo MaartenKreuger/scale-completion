@@ -1,0 +1,17 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmlsnodeclass_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) COMPREPLY=($(compgen -W '--user --system --all -Y' -- "${COMP_WORDS[COMP_CWORD]}"));;
+  esac
+}
+complete -F _mmlsnodeclass_completion mmlsnodeclass

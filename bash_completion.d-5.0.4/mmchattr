@@ -1,0 +1,34 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmchattr_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "-l --set-attr --pure-attr-create --pure-attr-replace --delete-attr --pure-attr-delete --hex-attr --hex-attr-name --no-attr-ctime --compact=NumDirectoryEntries -P -m -M -r -R -D -i -a -l -I --compression --indefinite-retention --write-affinity-failure-group --expiration-time --write-affinity-depth --block-group-factor --delete-attr --set-attr" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -P) COMPREPLY=($(compgen -W "$(_all_pools)" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         -m|-M|-r|-R) COMPREPLY=($(compgen -W "1 2 3" -- "${COMP_WORDS[COMP_CWORD]}")); return 0;;
+         -D|-i|-a) COMPREPLY=($(compgen -W "yes no" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         -I) COMPREPLY=($(compgen -W "yes defer" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         --compression) ($(compgen -W "yes no z lz4 zfast alphae alphah" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;; 
+         --indefinite-retention) COMPREPLY=($(compgen -W "yes no" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --write-affinity-failure-group) COMPREPLY=($(compgen -W "WadfgValueString" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;; 
+         --expiration-time) COMPREPLY=($(compgen -W "yyyy-mm-dd@hh:mm:ss 2038-01-19@03:14:07" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         --write-affinity-depth) COMPREPLY=($(compgen -W "WriteAffinityDepth" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         --block-group-factor)  COMPREPLY=($(compgen -W "BlockGroupFactor" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         --delete-attr)  COMPREPLY=($(compgen -W "gpfs.WAD gpfs.WADFG gpfs.BGF" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+         --set-attr)  COMPREPLY=($(compgen -W "gpfs.WAD= gpfs.WADFG= gpfs.BGF=" -- "${COMP_WORDS[COMP_CWORD]}"));return 0;;
+      esac
+      case "${COMP_WORDS[COMP_CWORD]}" in
+         -*) COMPREPLY=($(compgen -W "-l --set-attr --pure-attr-create --pure-attr-replace --delete-attr --pure-attr-delete --hex-attr --hex-attr-name --no-attr-ctime --compact=NumDirectoryEntries -P -m -M -r -R -D -i -a -l -I --compression --indefinite-retention --write-affinity-failure-group --expiration-time --write-affinity-depth --block-group-factor --delete-attr --set-attr" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+      esac;;
+  esac
+}
+complete -F _mmchattr_completion mmchattr

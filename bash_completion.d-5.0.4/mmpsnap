@@ -1,0 +1,34 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmpsnap_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_fs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -W "create delete status" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case "${COMP_WORDS[2]}" in 
+         create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  -j) COMPREPLY=($(compgen -W "$(_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --comment) COMPREPLY=($(compgen -W "CommentHere" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --uid) COMPREPLY=($(compgen -W "RemoteClusterUID" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W '-j --comment --uid --rpo --wait' -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+         delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  -j) COMPREPLY=($(compgen -W "$(_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  -s) COMPREPLY=($(compgen -W "$(_fs_snapshots ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W '-j -s' -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+         status) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  -j) COMPREPLY=($(compgen -W "$(_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W '-j' -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+      esac;;
+  esac
+}
+complete -F _mmpsnap_completion mmpsnap

@@ -1,0 +1,17 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmputacl_completion()
+{
+  COMPREPLY=()
+  case "${COMP_WORDS[COMP_CWORD-1]}" in
+    -i) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) COMPREPLY=($(compgen -f -o filenames -W "-d -i" -- "${COMP_WORDS[COMP_CWORD]}"));;
+  esac
+}
+complete -F _mmputacl_completion mmputacl

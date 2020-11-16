@@ -1,0 +1,62 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmnfs_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'config export'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case "${COMP_WORDS[1]}" in
+         config) COMPREPLY=($(compgen -W 'list change'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         export) COMPREPLY=($(compgen -W 'list load add remove change'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case "${COMP_WORDS[1]}" in
+          config) case "${COMP_WORDS[2]}" in
+                     list) COMPREPLY=($(compgen -W "--exportdefs -Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     change) COMPREPLY=($(compgen -W "--force"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+          export) case "${COMP_WORDS[2]}" in
+                     load) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              --nfsdefs) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --nfsdefs-match) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "--nfsdefs --nfsdefs-match -Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     add) if [ $COMP_CWORD -eq 3 ]
+                          then
+                             COMPREPLY=($(compgen -f -o dirnames  -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --client) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --pseudo) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--dry-run --pseudo --client"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac
+                          fi;;
+                     remove) if [ $COMP_CWORD -eq 3 ]  
+                          then
+                             COMPREPLY=($(compgen -f -o dirnames  -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             COMPREPLY=($(compgen -W "--force"  -- "${COMP_WORDS[COMP_CWORD]}"))
+                          fi;;
+                     change) if [ $COMP_CWORD -eq 3 ]  
+                          then
+                             COMPREPLY=($(compgen -f -o dirnames  -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --nfsadd) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --nfsremove) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --nfschange) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --nfsposition) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--dry-run --nfsadd --nfsremove --nfschange --nfsposition"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac
+                          fi;;
+                  esac;;
+       esac;;
+  esac
+}
+complete -F _mmnfs_completion mmnfs

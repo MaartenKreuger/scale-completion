@@ -1,0 +1,49 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmmsgqueue_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "enable disable status list config" -- "${COMP_WORDS[1]}"));;
+    3) case "${COMP_WORDS[1]}" in 
+         enable) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "-N -q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+         disable) COMPREPLY=($(compgen -W "-q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         list) COMPREPLY=($(compgen -W "--topics --servers" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         status) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "-v -N -q -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+         config) COMPREPLY=($(compgen -W "--add-nodes --remove --upgrade-auth --wf-upgrade --update-broker-settings" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case "${COMP_WORDS[1]}" in 
+         enable) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "-N -q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+         disable) return 0;;
+         list) COMPREPLY=($(compgen -W "-q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         status) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "-v -N -q -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+         config) case "${COMP_WORDS[2]}" in 
+                   --add-nodes) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "-N -q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                esac;;
+                   --remove|upgrade-auth) COMPREPLY=($(compgen -W "-q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   --update-broker-settings) COMPREPLY=($(compgen -W "-q" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 esac;;
+       esac;;
+  esac
+}
+complete -F _mmmsgqueue_completion mmmsgqueue
