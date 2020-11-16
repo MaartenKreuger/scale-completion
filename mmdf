@@ -10,7 +10,7 @@ _mmdf_completion()
 {
   COMPREPLY=()
   case "${#COMP_WORDS[@]}" in
-    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    2) COMPREPLY=($(compgen -W "$(_fs_names)" -- "${COMP_WORDS[1]}"));;
     *) case "${COMP_WORDS[COMP_CWORD-1]}" in
        -o|--inode-criteria) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
        --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
