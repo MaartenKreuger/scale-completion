@@ -1,0 +1,22 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmchconfig_completion()
+{
+  gpfsOptList="adminMode afmAsyncDelay afmAsyncOpWaitTimeout afmDirLookupRefreshInterval afmDirOpenRefreshInterval afmDisconnectTimeout afmEnableNFSSec afmExpirationTimeout afmFileLookupRefreshInterval afmFileOpenRefreshInterval afmHardMemThreshold afmHashVersion afmMaxParallelRecoveries afmNumReadThreads afmNumWriteThreads afmParallelMounts afmParallelReadChunkSize afmParallelReadThreshold afmParallelWriteChunkSize afmParallelWriteThreshold afmRPO afmReadSparseThreshold afmRefreshAsync afmRevalOpWaitTimeout afmSecondaryRW afmShowHomeSnapshot afmSyncOpWaitTimeout atimeDeferredSeconds automountDir cesSharedRoot cifsBypassTraversalChecking cipherList cnfsGrace cnfsMountdPort cnfsNFSDprocs cnfsReboot cnfsSharedRoot cnfsVersions commandAudit dataDiskCacheProtectionMethod dataDiskWaitTimeForRecovery dataStructureDump deadlockBreakupDelay deadlockDataCollectionDailyLimit deadlockDataCollectionMinInterval deadlockDetectionThreshold deadlockDetectionThresholdForShortWaiters deadlockOverloadThreshold debugDataControl defaultHelperNodes defaultMountDir disableInodeUpdateOnFdatasync dmapiDataEventRetry dmapiEventTimeout dmapiMountEvent dmapiMountTimeout dmapiSessionFailureTimeout enableIPv6 enforceFilesetQuotaOnRoot expelDataCollectionDailyLimit expelDataCollectionMinInterval failureDetectionTime fastestPolicyCmpThreshold fastestPolicyMaxValidPeriod fastestPolicyMinDiffPercent fastestPolicyNumReadSamples fileHeatLossPercent fileHeatPeriodMinutes frequentLeaveCountThreshold frequentLeaveTimespanMinutes ibAddress ignorePrefetchLUNCount linuxStatfsUnits logBufferCount lrocData lrocDataMaxFileSize lrocDataStubFileSize lrocDirectories lrocEnableStoringClearText lrocInodes maxActiveIallocSegs maxBufferDescs maxDownDisksForRecovery maxFailedNodesForRecovery maxFcntlRangesPerFile maxFilesToCache maxFilesToCache. maxMBpS maxMissedPingTimeout maxStatCache maxblocksize metadataDiskWaitTimeForRecovery minDiskWaitTimeForRecovery minMissedPingTimeout mmapRangeLock mmbuildgplOptions mmfsLogTimeStampISO8601 mmlsconfig nfsPrefetchStrategy niAddress nistCompliance noSpaceEventInterval nsdBufSpace nsdCksumTraditional nsdDumpBuffersOnCksumError nsdInlineWriteMax nsdMaxWorkerThreads nsdMinWorkerThreads nsdMultiQueue nsdRAIDBufferPoolSizePct nsdRAIDTracks nsdServerWaitTimeForMount nsdServerWaitTimeWindowOnMount numaMemoryInterleave pagepool pagepoolMaxPhysMemPct pitWorkerThreadsPerNode preFetchThreads. prefetchPct prefetchThreads readReplicaPolicy restripeOnDiskFailure rpcPerfNumberDayIntervals rpcPerfNumberHourIntervals rpcPerfNumberMinuteIntervals rpcPerfNumberSecondIntervals rpcPerfRawExecBufferSize rpcPerfRawStatBufferSize seqDiscardThreshold sharedTmpDir sidAutoMapRangeLength sidAutoMapRangeStart syncBuffsPerIteration syncSambaMetadataOps syslogOnly systemLogLevel tiebreakerDisks tscCmdPortRange uidDomain usePersistentReserve verbsPorts verbsPortsWaitTimeout verbsRdma verbsRdmaCm verbsRdmaPkey verbsRdmaRoCEToS verbsRdmaSend verbsRecvBufferCount verbsRecvBufferSize worker1Threads worker3Threads workerThreads writebehindThreshold"
+
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "${gpfsOptList}=" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '-i -I -N' -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+  esac
+}
+complete -F _mmchconfig_completion mmchconfig

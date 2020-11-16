@@ -1,0 +1,153 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmsmb_completion() {
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'export exportacl config'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case ${COMP_WORDS[1]} in
+         export) COMPREPLY=($(compgen -W 'list add change remove'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         exportacl) COMPREPLY=($(compgen -W 'list add change remove replace delete getid'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         config) COMPREPLY=($(compgen -W 'change list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case ${COMP_WORDS[1]} in
+         export) case ${COMP_WORDS[2]} in
+                    list) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --option) COMPREPLY=($(compgen -W "key all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --export-regex) COMPREPLY=($(compgen -W "RegExpression" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --header) COMPREPLY=($(compgen -W "RepeatHeaderEveryNLines" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --key-info) COMPREPLY=($(compgen -W "SMBoption supported" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "$(_smb_exports) -Y --option --export-regex --header --all --key-info" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    add) if [ $COMP_CWORD -eq 3 ]
+                         then
+                            COMPREPLY=($(compgen -W "SMBExportName" -- "${COMP_WORDS[COMP_CWORD]}"))
+                         else
+                            if [ $COMP_CWORD -eq 4 ]
+                            then
+                               COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                              case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --option) COMPREPLY=($(compgen -W "SMBOption=" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --key-info) COMPREPLY=($(compgen -W "SMBoption" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "--option --key-info" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac
+                            fi
+                         fi;;
+                    change) if [ $COMP_CWORD -eq 3 ]
+                            then
+                               COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                               case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                 --option) COMPREPLY=($(compgen -W "SMBOption=" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 --remove) COMPREPLY=($(compgen -W "SMBOption" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 --key-info) COMPREPLY=($(compgen -W "SMBoption" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 *) COMPREPLY=($(compgen -W "--option --remove --key-info" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac
+                            fi;;
+                    remove) if [ $COMP_CWORD -eq 3 ]
+                            then
+                               COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                               COMPREPLY=($(compgen -W "--force" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            fi;;
+                    *)  COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[2]}" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                   esac;;
+         exportacl)  case "${COMP_WORDS[2]}" in
+                        change)  if [ $COMP_CWORD -eq 3 ]
+                           then
+                              COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                           else
+                              case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --group) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --SID) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --system) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --access) COMPREPLY=($(compgen -W "ALLOWED DENIED" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --permissions) COMPREPLY=($(compgen -W "FULL CHANGE READ RWXDPO" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "--user --group --system --SID --viewsids --access --permissions --force" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac
+                           fi;;
+                       add) if [ $COMP_CWORD -eq 3 ]
+                            then
+                                COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                                case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --group) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --SID) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --system) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --access) COMPREPLY=($(compgen -W "ALLOWED DENIED" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --permissions) COMPREPLY=($(compgen -W "FULL CHANGE READ RWXDPO" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--user --group --system --SID --viewsids --access --permissions --force" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                esac
+                            fi;;
+                       replace) if [ $COMP_CWORD -eq 3 ]
+                                then
+                                   COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                                else
+                                  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --group) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --SID) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --system) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --access) COMPREPLY=($(compgen -W "ALLOWED DENIED" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --permissions) COMPREPLY=($(compgen -W "FULL CHANGE READ RWXDPO" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--user --group --system --SID --viewsids --access --permissions --force" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac
+                               fi;;
+                       remove)  if [ $COMP_CWORD -eq 3 ]
+                                then
+                                   COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                                else
+                                   case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                     --user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --group) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --SID) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --system) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --access) COMPREPLY=($(compgen -W "ALLOWED DENIED" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --permissions) COMPREPLY=($(compgen -W "FULL CHANGE READ RWXDPO" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W "--user --group --system --SID --viewsids --access --permissions --force" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   esac
+                                fi;;
+                       list) if [ $COMP_CWORD -eq 3 ]
+                             then
+                                COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                             else
+                                COMPREPLY=($(compgen -W "--viewsids --viewsddl" -- "${COMP_WORDS[COMP_CWORD]}"))
+                             fi;;
+                       delete) if [ $COMP_CWORD -eq 3 ]
+                               then
+                                  COMPREPLY=($(compgen -W "$(_smb_exports)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                               else
+                                  COMPREPLY=($(compgen -W "--viewsids --force" -- "${COMP_WORDS[COMP_CWORD]}"))
+                               fi;;
+                       getid) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --group) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --system) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "--user --group --system" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                   esac;;
+         config)   case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                     list)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --header) COMPREPLY=($(compgen -W "RepeatHeaderEveryNLines" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-info) COMPREPLY=($(compgen -W "SMBoption supported" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "ListOfSMBOptions -Y --header --all --key-info"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     change) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --option) COMPREPLY=($(compgen -W "SMBOption=" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --remove) COMPREPLY=($(compgen -W "SMBOption" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --key-info) COMPREPLY=($(compgen -W "SMBoption" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "--vfs-fruit-enable --option --remove --key-info" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                   esac;;
+     esac;;
+  esac
+}
+complete -F _mmsmb_completion mmsmb

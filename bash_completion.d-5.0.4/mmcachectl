@@ -1,0 +1,23 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmcachectl_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "show" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         --device) COMPREPLY=($(compgen -W "$(_fs_names)"  -- "${COMP_WORDS[COMP_CWORD]}"))
+                   fsdevice=$COMPREPLY;;
+         --fileset) COMPREPLY=($(compgen -W "$(_linked_fileset_names $fsdevice)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --inode-num) COMPREPLY=($(compgen -W "yes no" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '--device --fileset --inode-num --show-filename -Y' -- "${COMP_WORDS[COMP_CWORD]}"));;
+     esac;;
+  esac
+}
+complete -F _mmcachectl_completion mmcachectl
