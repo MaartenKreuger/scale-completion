@@ -1,0 +1,119 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmafmctl_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) COMPREPLY=($(compgen -W 'resync expire unexpire stop start getstate resumeRequeued flushPending failover prefetch evict failback failoverToSecondary convertToPrimary replacePrimary failbackToPrimary applyUpdates getPrimaryId'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case "${COMP_WORDS[2]}" in
+           replacePrimary|resync|expire|unexpire|stop|start|getstate|resumeRequeued) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) return 0;;
+                                                                                     esac;;
+           failover) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --new-target) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -s) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--new-target -s --target-only"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                     esac;;
+           flushPending) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --list-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -s) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--list-file -s"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                         esac;;
+           prefetch) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --prefetch-threads) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --directory) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --list-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --dir-list-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --home-list-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --home-inode-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --home-fs-path) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -s) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --gateway) COMPREPLY=($(compgen -W "$(_gateway_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--readdir-only --prefetch-threads -s --retry-failed-file-list --enable-failed-file-list --directory --dir-list-file --policy --nosubdirs --list-file --home-list-file --policy --home-inode-file --home-fs-path --metadata-only --gateway"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                     esac;;
+          evict) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --log-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --list-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --safe-limit) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --order) COMPREPLY=($(compgen -W "LRU SIZE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --filter) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--list-file --file --log-file --safe-limit --order --filter "  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                 esac;;
+          failback) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --failover-time) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -s) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--failover-time --start --stop -s"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                    esac;;
+          failoverToSecondary) case $COMP_CWORD in
+                                 3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 *) COMPREPLY=($(compgen -W "--norestore --restore"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+          convertToPrimary) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --afmtarget) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --secondary-snapname) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --rpo) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -s) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--afmtarget --inband --secondary-snapname --check-metadata --nocheck-metadata --rpo -s"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                            esac;;
+          convertToSecondary) case $COMP_CWORD in
+                                3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                      --primaryid) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                      *) COMPREPLY=($(compgen -W "--primaryid --force"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   esac;;
+                              esac;;
+          changeSecondary) case $COMP_CWORD in
+                              3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              5) COMPREPLY=($(compgen -W "--new-target"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              6) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    -s) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--target-only --inband -s"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                           esac;;
+          failbackToPrimary) case $COMP_CWORD in
+                               3) COMPREPLY=($(compgen -W "-j"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               4) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--start --stop --force"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;       
+       esac;;
+  esac
+}
+complete -F _mmafmctl_completion mmafmctl

@@ -1,0 +1,35 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmsdrrestore_completion()
+{
+  COMPREPLY=()
+  if [ $COMP_CWORD -eq 1 ]
+  then
+     COMPREPLY=($(compgen -W "--ccr-repair -N -R -a -F -p" -- "${COMP_WORDS[COMP_CWORD]}"));
+  else 
+     if [ "${COMP_WORDS[1]}" = "--ccr-repair" ]
+     then
+        case "${COMP_WORDS[COMP_CWORD-1]}" in
+          -R) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          -p) COMPREPLY=($(compgen -W "$(_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          -F) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+           *) COMPREPLY=($(compgen -W "-R -F -p" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         esac
+      else
+         case "${COMP_WORDS[COMP_CWORD-1]}" in
+           -N) COMPREPLY=($(compgen -W "$(_nodes) $(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           -R) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           -p) COMPREPLY=($(compgen -W "$(_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           -F) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+           *) COMPREPLY=($(compgen -W "-N -R -a -F -p" -- "${COMP_WORDS[COMP_CWORD]}"));;
+        esac
+     fi
+  fi
+}
+complete -F _mmsdrrestore_completion mmsdrrestore

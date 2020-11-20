@@ -1,0 +1,396 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmcloudgateway_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'account cloudStorageAccessPoint cloudService keyManager containerPairSet maintenance config node clientAssist service files'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case ${COMP_WORDS[1]} in
+         account)                 COMPREPLY=($(compgen -W 'create update delete list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         cloudStorageAccessPoint) COMPREPLY=($(compgen -W 'create update delete list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         cloudService)            COMPREPLY=($(compgen -W 'create update delete list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         keyManager)              COMPREPLY=($(compgen -W 'create update rotate list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         containerPairSet)        COMPREPLY=($(compgen -W 'create update delete list test'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         maintenance)             COMPREPLY=($(compgen -W 'create update delete list setState setFrequency status'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         config)                  COMPREPLY=($(compgen -W 'set list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         node)                    COMPREPLY=($(compgen -W 'list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         clientAssist)            COMPREPLY=($(compgen -W 'enable disable'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         service)                 COMPREPLY=($(compgen -W 'start stop status version backupConfig restoreConfig'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         files)                   COMPREPLY=($(compgen -W 'migrate recall restore delete destroy reconcile cloudList backupDB checkDB rebuildDB defragDB list import export checkCloudObject deleteCloudObject'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case ${COMP_WORDS[1]} in
+         account) case ${COMP_WORDS[2]} in
+                    create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --account-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-type) COMPREPLY=($(compgen -W "S3 SWIFT3 OPENSTACK-SWIFT CLEVERSAFE-NEW AZURE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --user-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --pwd-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-path) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-alias-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-type) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-pwd-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --tenant-id) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --account-name --cloud-type --user-name --pwd-file --src-keystore-path --src-keystore-alias-name --src-keystore-type --src-keystore-pwd-file --tenant-id" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    update) case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --account-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --user-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --pwd-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-path) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-alias-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-type) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --src-keystore-pwd-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --account-name --user-name --pwd-file --src-keystore-path --src-keystore-alias-name --src-keystore-type --src-keystore-pwd-file" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    delete) case "${COMP_WORDS[COMP_CWORD-1]}" in        
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --account-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --account-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    list)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --account-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --name-list --account-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                  esac;;
+         cloudStorageAccessPoint) case ${COMP_WORDS[2]} in
+                    create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-storage-access-point-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --account-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --url) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --region) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --proxy-ip) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --proxy-port) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --mpu-parts-size) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --server-cert-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --account-name --cloud-storage-access-point --server-cert-path --mpu-parts-size --user-name --pwd-file --src-keystore-path --src-keystore-alias-name --src-keystore-type --src-keystore-pwd-file --tenant-id" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    update) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-storage-access-point-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --url) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --region) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --proxy-ip) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --proxy-port) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --server-cert-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --cloud-storage-access-point --server-cert-path --proxy-ip --proxy-port --region --url" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-storage-access-point-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --cloud-storage-access-point" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-storage-access-point-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--name-list -Y --cloud-nodeclass --cloud-storage-access-point" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                 esac;;
+            cloudService) case ${COMP_WORDS[2]} in
+                    create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-service-type) COMPREPLY=($(compgen -W "Sharing Tiering" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --account-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --account-name --cloud-service-type --cloud-service-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    update) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--enable --disable --cloud-nodeclass --cloud-service-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --cloud-service-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--name-list -Y --cloud-nodeclass --cloud-service-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                esac;;
+            keyManager) case ${COMP_WORDS[2]} in
+                    create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-manager-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-manager-type) COMPREPLY=($(compgen -W "RKM LKM" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --alias) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-hostname) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-port) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-adminuser) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-groupname) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-pwd-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass  --key-manager-name --key-manager-type --alias --sklm-hostname --sklm-port --sklm-adminuser --sklm-groupname --sklm-pwd-file" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    update) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-manager-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-port) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-adminuser) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sklm-pwd-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--update-certificates --cloud-nodeclass --key-manager-name --sklm-port --sklm-adminuser --sklm-pwd-file" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    rotate) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-manager-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --key-manager-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                    list)  case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-manager-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --key-manager-name --name-list -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                esac;;
+            containerPairSet) case ${COMP_WORDS[2]} in
+                    create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container-pair-set-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --path) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --data-container) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --meta-container) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --cloud-directory-path) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --etag) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --enc) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --data-location) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --meta-location) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --key-manager-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --active-key) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --transparent-recalls) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --thumbnail-size) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --destroy-event-handling) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --policy-tmp-dir) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --auto-spillover) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --auto-spillover-threshold) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --read-only) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --container-pair-set-name --cloud-service-name --scope-to-filesystem --scope-to-fileset --path --data-container --meta-container --cloud-directory-path  --etag --enc --data-location --meta-location --key-manager-name --active-key --thumbnail-size --transparent-recalls --destroy-event-handling --policy-tmp-dir --auto-spillover --auto-spillover-threshold --read-only" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    test)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container-pair-set-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --container-pair-set-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container-pair-set-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --policy-tmp-dir) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --container-pair-set-name --policy-tmp-dir" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    list)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container-pair-set-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --container-pair-set-name --name-list -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    update) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container-pair-set-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --etag) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --enc) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --active-key) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --transparent-recalls) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --destroy-event-handling) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --policy-tmp-dir) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --auto-spillover) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --auto-spillover-threshold) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --read-only) COMPREPLY=($(compgen -W "ENABLE DISABLE" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --container-pair-set-name --etag --enc --active-key --transparent-recalls --destroy-event-handling --policy-tmp-dir --auto-spillover --auto-spillover-threshold --read-only" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+             esac;; 
+          maintenance) case ${COMP_WORDS[2]} in
+                    create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --maintenance-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --daily) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --weekly) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --maintenance-name --daily --weekly" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    update) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --maintenance-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --daily) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --weekly) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --maintenance-name --daily --weekly" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --maintenance-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass --maintenance-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    list)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    setState) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --maintenance-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --state) COMPREPLY=($(compgen -W "enable disable" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -W "--cloud-nodeclass --maintenance-name --state" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    setFrequency) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                     --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --task) COMPREPLY=($(compgen -W "reconcile backup delete" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --frequency) COMPREPLY=($(compgen -W "never daily weekly monthly " -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W "--cloud-nodeclass --task --frequency" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac;;
+                    status) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+             esac;;
+          config) case ${COMP_WORDS[2]} in
+                    set)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               Attribute=) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass Attribute=" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    list)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                  esac;;
+          node) case ${COMP_WORDS[2]} in
+                    list)   case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-nodeclass) COMPREPLY=($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--cloud-nodeclass -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                esac;;
+          clientAssist) case ${COMP_WORDS[2]} in
+                    enable) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    disable) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+             esac;;
+          service) case ${COMP_WORDS[2]} in
+                     start) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "alltct $(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     stop) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "alltct $(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     status) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "alltct $(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     version) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               -N) COMPREPLY=($(compgen -W "all alltct $(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "-N -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                     backupConfig) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --backup-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--backup-file" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     restoreConfig) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --backup-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--backup-file" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+            esac;;
+          files) case ${COMP_WORDS[2]} in
+                    migrate) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --cloud-servicename) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -f -o filenames -W "--cloud-service-name -v --co-resident-state" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    recall) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --local-cluster) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --owning-cluster) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -f -o filenames -W "--local-cluster --owning-cluster -v" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    restore) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                -F) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --restore-location) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --id) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -f -o filenames -W "-v --overwrite --restore-stubs-only -F --dry-run --restore-location --id" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    delete) if [ $COMP_CWORD = 3 ]
+                            then
+                               COMPREPLY=($(compgen -W "--delete-local-file  --recall-cloud-file --require-local-file" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                               COMPREPLY=($(compgen -f -o filenames -W "--keep-last-cloud-file" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            fi;;
+                    destroy) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                --filesystem-path) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --cloud-retention-period-days) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --container-pairset-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                --timeout) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) COMPREPLY=($(compgen -f -o filenames -W "--preview --filesystem-path --cloud-retention-period-days --container-pairset-name --timeout" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                    reconcile) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --container-pairset-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--container-pairset-name $(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;        
+                               esac;;
+                    cloudList) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --path) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --file-versions) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --file-usage) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --depth) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --start) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  --end) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--path --file --file-versions --file-usage --depth --start --end --recursive " -- "${COMP_WORDS[COMP_CWORD]}"));;                                  
+                               esac;;
+                    rebuildDB) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --container-pairset-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--container-pairset-name $(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+                    backupDB) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --container-pairset-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--container-pairset-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+                    checkDB) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --container-pairset-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--container-pairset-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+                    defragDB) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                  --container-pairset-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--container-pairset-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+                    list) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    import) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --directory) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --directory-root) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --target-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -f -o filenames -W "--cloud-service-name --container --directory --directory-root --target-name --import-stub-only --import-metadata" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    export) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --manifest-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --tag) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --container) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --target-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -f -o filenames -W "--cloud-service-name --container --target-name --manifest-file --tag --export-metadata --fail-if-metadata-too-big --strip-filesystem-root" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                    checkCloudObject) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                          --container) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          --object-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          *) COMPREPLY=($(compgen -W "--container --object-name --cloud-service-name -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                       esac;;
+                    deleteCloudObject) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                          --container) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          --object-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          --file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          --cloud-service-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                          *) COMPREPLY=($(compgen -W "--container --file --cloud-service-name--object-name" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                       esac;;
+                esac;;
+       esac;;  
+  esac
+}
+complete -F _mmcloudgateway_completion mmcloudgateway

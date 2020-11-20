@@ -1,0 +1,27 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmchfileset_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -W "$(_fileset_names ${COMP_WORDS[1]}) -J" -- "${COMP_WORDS[2]}"));;
+    *)  case "${COMP_WORDS[COMP_CWORD-1]}" in
+        -t) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+        --inode-limit) COMPREPLY=($(compgen -W '100K:50K 1M:500K 1G:500M' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        -J) COMPREPLY=($(compgen -W "$(_fileset_junctions ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+        -j) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+        --allow_permission-change) COMPREPLY=($(compgen -W 'chmodOnly setAclOnly chmodAndSetAcl chmodAndUpdateAcl' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        --iam-mode) COMPREPLY=($(compgen -W 'ad nc co cp' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        -p) COMPREPLY=($(compgen -W 'afmAsyncDelay afmDirLookupRefreshInterval afmDirOpenRefreshInterval afmEnableAutoEviction afmExpirationTimeout afmFileLookupRefreshInterval afmGateway afmMode afmNumFlushThreads afmParallelReadChunkSize afmParallelReadThreshold afmParallelWriteChunkSize afmParallelWriteThreshold afmPrefetchThreshold afmPrimaryId afmRPO afmShowHomeSnapshot' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        *)COMPREPLY=($(compgen -W '-p -t --inode-space --inode-limit --allow-permission-change --iam-mode -j' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        esac;;
+  esac
+}
+complete -F _mmchfileset_completion mmchfileset

@@ -1,0 +1,20 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmchlicense_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "client fpo server" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '--accept -N' -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+  esac
+}
+complete -F _mmchlicense_completion mmchlicense

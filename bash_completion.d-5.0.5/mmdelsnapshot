@@ -1,0 +1,23 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmdelsnapshot_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -W "$(_fs_snapshots ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+           -j) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;  
+           -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           --qos) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           *) COMPREPLY=($(compgen -W '-j -N --qos ' -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+  esac
+}
+complete -F _mmdelsnapshot_completion mmdelsnapshot

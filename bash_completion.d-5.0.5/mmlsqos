@@ -1,0 +1,24 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmlsqos_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    *)  case "${COMP_WORDS[COMP_CWORD-1]}" in
+          --fine-stats) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+          --pool) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[1]}) all"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+          --seconds) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+          --sum-classes) COMPREPLY=($(compgen -W "yes no"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+          --sum-nodes) COMPREPLY=($(compgen -W "yes no"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+          *) COMPREPLY=($(compgen -W '-Y --fine-stats --pool --seconds --sum-classes --sum-nodes' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        esac;;
+  esac
+}
+complete -F _mmlsqos_completion mmlsqos

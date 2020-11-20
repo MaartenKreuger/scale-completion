@@ -1,0 +1,18 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmpmon_completion()
+{
+  COMPREPLY=()
+  case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -i) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -d|-t|-r) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '-t -d -r -s -i' -- "${COMP_WORDS[COMP_CWORD]}"));;
+  esac
+}
+complete -F _mmpmon_completion mmpmon

@@ -1,0 +1,127 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmobj_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'config file-access multiregion policy swift s3'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case "${COMP_WORDS[1]}" in
+         config) COMPREPLY=($(compgen -W 'list change manage'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         file-access) COMPREPLY=($(compgen -W 'enable disable objectize link-fileset'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         multiregion) COMPREPLY=($(compgen -W 'list enable export import remove'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         policy) COMPREPLY=($(compgen -W 'list create change deprecate'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         swift) COMPREPLY=($(compgen -W 'base'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         s3) COMPREPLY=($(compgen -W 'enable disable list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case "${COMP_WORDS[1]}" in
+          swift) case "${COMP_WORDS[2]}" in
+                     base) case $COMP_CWORD in
+                             3) COMPREPLY=($(compgen -W "-g"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             4) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             5) COMPREPLY=($(compgen -W "--cluster-hostname"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             6) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                   -o) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   -i) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --ces-group) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --admin-token) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --remote-keystone-url) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --admin-user) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --swift-user) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --pwd-file) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --join-region-file) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --region-number) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   *) COMPREPLY=($(compgen -W "-o -i --ces-group --local-keystone --admin-token Token --remote-keystone-url --configure-remote-keystone --admin-user --swift-user --pwd-file --enable-file-access --enable-s3 --enable-multi-region --join-region-file --region-number"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                           esac;;
+                  esac;;
+          config) case "${COMP_WORDS[2]}" in
+                     list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              --ccrfile) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --section) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --property) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "--ccrfile --section --property -Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                     change) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              --ccrfile) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --section) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --property) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --merge-file) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "--merge-file --ccrfile --section --property"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                     manage) COMPREPLY=($(compgen -W "--version-sync"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+          policy) case "${COMP_WORDS[2]}" in
+                     create) if [ $COMP_CWORD -eq 3 ]
+                             then
+                                 COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"))
+                             else
+                                case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                   -f) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --file-system-name) COMPREPLY=($(compgen -W "$(_localfs_names)"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   -i) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --compression-schedule) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --encryption-keyfile) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   *) COMPREPLY=($(compgen -W "-f --file-system-name -i --compression-schedule --encryption-keyfile --enable-file-access --force-rule-append --enable-encryption --enable-compression"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                esac
+                             fi;;
+                     change) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                 --deprecate) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 --remove-region-number) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 --compression-schedule) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "--deprecate --remove-region-number --compression-schedule PolicyName --default --add-local-region"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              esac;;
+                     manage) COMPREPLY=($(compgen -W "--version-sync"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac;;
+          file-access) case "${COMP_WORDS[2]}" in
+                         enable) return 0;;
+                         disable) COMPREPLY=($(compgen -W "--objectizer"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                         objectize) case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                                     --object-path) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --storage-policy) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --account-name) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --container-name) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --object-name) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     -N|--node) COMPREPLY=($(compgen -W "$(_nodes)"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W "--object-path --storage-policy --account-name --container-name --object-name -N --node "  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac;;
+                         link-fileset) case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                                     --sourcefset-path) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --account-name) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --container-name) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --file-access-policy-name) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W "--source-fset-path --account-name --container-name --file-access-policy-name --update-listing"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac;;
+                      esac;;
+          multiregion) case "${COMP_WORDS[2]}" in
+                          list) COMPREPLY=($(compgen -W "-Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          enable) return 0;;
+                          export) case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                                     --region-file) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W "--region-file"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac;;
+                          import) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --region-file) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--region-file"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac;;
+                          remove) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --region-number) COMPREPLY=($(compgen -W ""  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "--region-number --force"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  esac;;
+                       esac;;
+          s3) case "${COMP_WORDS[2]}" in
+                enable) return 0;;
+                disable) return 0;;
+                list) COMPREPLY=($(compgen -W "-Y"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+
+       esac;;
+  esac
+}
+complete -F _mmobj_completion mmobj

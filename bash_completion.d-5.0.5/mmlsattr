@@ -1,0 +1,18 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmlsattr_completion()
+{
+  COMPREPLY=()
+  case "${COMP_WORDS[COMP_CWORD-1]}" in
+    -n) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[1]}"));;
+    --get-attr) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[1]}"));;
+    *) COMPREPLY=($(compgen -f -o filenames -W '-L -l -d --dump-attr -n --get-attr -X --hex-attr --hex-attr-name' -- "${COMP_WORDS[COMP_CWORD]}"));;
+  esac
+}
+complete -F _mmlsattr_completion mmlsattr

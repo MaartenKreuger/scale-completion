@@ -1,0 +1,173 @@
+#
+# Spectrum Scale v5.0 information functions for use by bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+_user_callbacks()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscallback user | grep '^[a-zA-Z0-9]')
+}
+_all_callbacks()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscallback all | grep '^[a-zA-Z0-9]')
+}
+_gateway_nodes()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster -Y | grep -v HEADER  | grep gateway | awk -F ':' '{ print $8 }')
+}
+_cloudgateway_nodes()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster -Y | grep -v HEADER | grep -i cloudgateway | awk -F ':' '{ print $8 }')
+}
+_manager_nodes()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster -Y | grep Manager | awk -F ':' '{ print $8 }')
+}
+_fs_snapshots()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlssnapshot $1 -s all -Y | tail -n +2 | awk -F ':' '{ print $15":"$8 }' | sed "s/^://" | tr '\n' ' ')   
+}
+_smb_exports()
+{
+   echo $(/usr/lpp/mmfs/bin/mmsmb export list 2>/dev/null | tail -n +2 | awk '{ print $1 }' | tr '\n' ' ')
+}
+_ces_ips()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster --ces -Y | grep cesNode | tail -n +2 | awk -F ':' '{ print $12 }' | tr '\n' ' ')
+}
+_ces_groups()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster --ces -Y | grep cesNode | tail -n +2 | awk -F ':' '{ print $10 }' | sort | uniq  | tr '\n' ' ')
+}
+_ces_nodes()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster --ces -Y | grep cesNode | tail -n +2 | awk -F ':' '{ print $8 }')
+}
+_show_profiles()
+{
+   echo $(cd /usr/lpp/mmfs/profiles/; ls *.profile | sed 's/.profile//')
+}
+_min_release_level()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlsconfig minReleaseLevel | awk '{ print $2 }')
+}
+_remote_devices()
+{
+  echo $(/usr/lpp/mmfs/bin/mmremotefs show all -Y 2>/dev/null | grep -v HEADER | awk -F ':' '{ print $7 }' | tr '\n' ' ')
+}
+_remote_clusters()
+{
+  echo $(/usr/lpp/mmfs/bin/mmremotecluster show all -Y 2>/dev/null | grep -v HEADER | awk -F ':' '{ print $7 }' | tr '\n' ' ')
+}
+_remote_clusters_contacts()
+{
+  echo $(/usr/lpp/mmfs/bin/mmremotecluster show all -Y 2>/dev/null | grep -v HEADER | awk -F ':' '{ print $7" "$8 }' | tr '\n' ' ')
+}
+_fs_pools()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlspool $1 all | tail -n +2 | awk '{ print $1 }' | tr '\n' ' ' )
+}
+_fs_mountpoint()
+{
+  /usr/lpp/mmfs/bin/mmclidecode "$(/usr/lpp/mmfs/bin/mmlsfs $1 -T -Y | tail -1 | awk -F ':' '{ print $9 }' | tr -d '\n' )"
+}
+_all_pools()
+{
+  for fs in $(_localfs_names)
+  do
+     echo $(_fs_pools $fs)
+  done
+}
+_fs_devmountpoints()
+{
+  /usr/lpp/mmfs/bin/mmclidecode "$(/usr/lpp/mmfs/bin/mmlsfs all -T -Y | grep -v HEADER | awk -F ':' '{ print $7" "$9 }' | tr '\n' ' ')"
+}
+_linked_fileset_names()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsfileset $1 | grep Linked | grep -vw '^root' | awk '{ print $1 }' | tr '\n' ' ')
+}
+_unlinked_fileset_names()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsfileset $1 | grep Unlinked | grep -vw '^root' | awk '{ print $1 }' | tr '\n' ' ')
+}
+_fileset_names()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsfileset $1 | tail -n +3 | grep -vw '^root' | awk '{ print $1 }' | tr '\n' ' ')
+}
+_fileset_junctions()
+{
+  /usr/lpp/mmfs/bin/mmclidecode "$(/usr/lpp/mmfs/bin/mmlsfileset $1 -Y | grep -v HEADER | grep -v '\-\-' | awk -F ':' '{ print $12 }' | tr '\n' ' ')"
+}
+_fs_names()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsconfig | grep '^/dev/' | awk -F '/' '{ print $3 }' | tr '\n' ' ') $(/usr/lpp/mmfs/bin/mmremotefs show all -Y 2>/dev/null | grep -v HEADER | awk -F ':' '{ print $7 }' | tr '\n' ' ')
+
+}
+_localfs_names()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsconfig | grep '^/dev/' | awk -F '/' '{ print $3 }' | tr '\n' ' ')
+}
+_user_nodeclasses()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsnodeclass --user -Y | tail -n +2 | awk -F ':' '{ print $7 }' | tr '\n' ' ') 
+}
+_nodeclasses()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsnodeclass --all -Y | tail -n +2 | awk -F ':' '{ print $7 }' | tr '\n' ' ') 
+}
+_nodes()
+{
+  echo $(/usr/lpp/mmfs/bin/mmlsnode -N all | tr '\n' ' ')  
+}
+_nsd_fs()
+{
+   myfs=$1
+   [[ "$myfs" == "" ]] && myfs=all
+     case $myfs in
+     all) /usr/lpp/mmfs/bin/mmlsnsd -Y | tail -n +2 | awk -F ':' '{ print $8 }';;
+     all_local) /usr/lpp/mmfs/bin/mmlsnsd -Y | tail -n +2 |  awk -F ':' '{ print $8 }';;
+     all_remote) echo;;
+     *) /usr/lpp/mmfs/bin/mmlsnsd -f $myfs -Y | tail -n +2 | awk -F ':' '{ print $8 }';;
+   esac
+}
+_nsds()
+{
+   /usr/lpp/mmfs/bin/mmlsnsd -Y 2>/dev/null | awk -F ':' '{ print $9 }'
+}
+_nsdid_free()
+{
+   /usr/lpp/mmfs/bin/mmlsnsd -F -Y 2>/dev/null | awk -F ':' '{ print $9 }'
+}
+_nsd_free()
+{
+   /usr/lpp/mmfs/bin/mmlsnsd -F -Y 2>/dev/null | awk -F ':' '{ print $8 }'
+}
+_qos_classes()
+{
+   echo maintenance other
+}
+_fs_fgs()
+{
+    /usr/lpp/mmfs/bin/mmlsdisk $1 -Y  | grep -v HEADER | awk -F ':' '{ print $10 }' | sort | uniq | tr '\n' ' ' 
+} 
+
+_list_kernels()
+{
+   if [ -x /usr/bin/rpm ]
+   then
+      /usr/bin/rpm -qa kernel | sed "s/^kernel-//" | tr '\n' ' '
+   else
+      if [ -x /usr/bin/dpkg ]
+      then
+         /usr/bin/dpkg --list | grep linux-image | awk '{ print $3 }' | tr '\n' ' ' 
+      else
+         echo
+      fi
+   fi
+}
+_list_nics()
+{
+   ip link show | grep "^[0-9]" | awk -F ':' '{ print $2 }' | grep -vw lo | tr '\n' ' '
+}

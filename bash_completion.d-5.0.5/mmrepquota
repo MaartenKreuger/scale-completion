@@ -1,0 +1,31 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmrepquota_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "-u -g -j -q -t -a $(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[1]}" in
+          -u) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                 --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 *) COMPREPLY=($(compgen -W '-a -g -j -e -n -v --block-size $(_localfs_names)' -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+          -g) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W '-a -u -j -e -n -v --block-size $(_localfs_names)' -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+          -j) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                 --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 *) COMPREPLY=($(compgen -W '-a -j -e -q -n -v --block-size $(_localfs_names)' -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+           *) COMPREPLY=($(compgen -W "-q -t -a $(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+  esac
+}
+complete -F _mmrepquota_completion mmrepquota

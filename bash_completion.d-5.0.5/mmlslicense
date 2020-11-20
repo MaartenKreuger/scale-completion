@@ -1,0 +1,19 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmlslicense_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+       --capacity) COMPREPLY=($(compgen -W '--formatted' -- "${COMP_WORDS[COMP_CWORD]}"));;
+       *) COMPREPLY=($(compgen -W '-Y -L --capacity --licensed-usage' -- "${COMP_WORDS[COMP_CWORD]}"));;
+    esac;;
+  esac
+}
+complete -F _mmlslicense_completion mmlslicense

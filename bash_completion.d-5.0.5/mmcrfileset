@@ -1,0 +1,26 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmcrfileset_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) COMPREPLY=($(compgen -W "fileset1 fileset2" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *)  case "${COMP_WORDS[COMP_CWORD-1]}" in
+        -t) COMPREPLY=($(compgen -W "comment here" -- "${COMP_WORDS[COMP_CWORD]}"));;
+        --inode-space) COMPREPLY=($(compgen -W "new ExistingFileset" -- "${COMP_WORDS[1]}"));;
+        new) COMPREPLY=($(compgen -W '--inode-limit' -- "${COMP_WORDS[1]}"));;
+        --inode-limit) COMPREPLY=($(compgen -W '100K:50K 1M:500K 1G:500M' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        --allow_permission-change) COMPREPLY=($(compgen -W 'chmodOnly setAclOnly chmodAndSetAcl chmodAndUpdateAcl' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        -p) COMPREPLY=($(compgen -W 'afmAsyncDelay afmDirLookupRefreshInterval afmDirOpenRefreshInterval afmEnableAutoEviction afmExpirationTimeout afmFileLookupRefreshInterval afmGateway afmMode afmNumFlushThreads afmParallelReadChunkSize afmParallelReadThreshold afmParallelWriteChunkSize afmParallelWriteThreshold afmPrefetchThreshold afmPrimaryId afmRPO afmShowHomeSnapshot' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        *)COMPREPLY=($(compgen -W '-p -t --inode-space new --inode-limit --allow-permission-change' -- "${COMP_WORDS[COMP_CWORD]}"));;
+        esac;;
+  esac
+}
+complete -F _mmcrfileset_completion mmcrfileset

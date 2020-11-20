@@ -1,0 +1,64 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmuserauth_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'service'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) COMPREPLY=($(compgen -W 'create list check remove'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case "${COMP_WORDS[2]}" in
+         list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  --data-access-method) COMPREPLY=($(compgen -W "file object all"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W "-Y --data-access-method"  -- "${COMP_WORDS[COMP_CWORD]}"));; 
+               esac;;
+         check) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  --data-access-method) COMPREPLY=($(compgen -W "file object all"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  -N) COMPREPLY=($(compgen -W "$(_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W "-r --rectify -N --server-reachability --data-access-method"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+         remove) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    --data-access-method) COMPREPLY=($(compgen -W "file object all"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "--idmapdelete --data-access-method"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 esac;;
+         create) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    --type) COMPREPLY=($(compgen -W "ldap local ad nis userdefined" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --data-access-method) COMPREPLY=($(compgen -W "file object all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --servers) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --base-dn) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --pwd-file) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-dn) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --group-dn) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --netgroup-dn) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-objectclass) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --group-objectclass) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --netbios-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --domain) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --idmap-role) COMPREPLY=($(compgen -W "master subordinate" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --idmap-role) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --idmap-range-size) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --unixmap-domains) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --ldap-domains) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --kerberos-server) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --kerberso-realm) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-name-attrib) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-id-attrib) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-mail-attrib) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --user-filter) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --ks-dns-name) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --ks-admin-user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --ks-swift-user) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    --ks-ext-endpoint) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    -N) COMPREPLY=($(compgen -W "$(_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "-h --help --data-access-method --type --servers --base-dn --enable-anonymous-bind --user-name --pwd-file --enable-server-tls --enable-ks-ssl --enable-kerberos --enable-nfs-kerberos --user-dn --group-dn --netgroup-dn --netbios-name --domain --idmap-role --idmap-range --idmap-range-size --user-objectclass --group-objectclass --user-name-attrib --user-id-attrib --user-mail-attrib --user-filter --ks-dns-name --ks-admin-user --ks-swift-user --ks-ext-endpoint --kerberos-server --kerberos-realm --unixmap-domains --enable-overlapping-unixmap-ranges --ldapmap-domains"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 esac;;
+       esac;;
+  esac
+}
+complete -F _mmuserauth_completion mmuserauth

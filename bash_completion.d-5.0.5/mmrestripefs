@@ -1,0 +1,23 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmrestripefs_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -o|--inode-criteria) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -P) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --qos) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '-m -r -b --strict -R -p -z --check-conflicting-replicas -N -o -P -inode-criteria --qos QosClass --metadata-only' -- "${COMP_WORDS[COMP_CWORD]}"));;
+      esac;;
+  esac
+}
+complete -F _mmrestripefs_completion mmrestripefs

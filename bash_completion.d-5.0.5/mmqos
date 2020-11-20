@@ -1,0 +1,177 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmqos_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'class throttle config device report import export'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case ${COMP_WORDS[1]} in
+         class)    COMPREPLY=($(compgen -W 'create update delete set list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         throttle) COMPREPLY=($(compgen -W 'create delete update list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         config)   COMPREPLY=($(compgen -W 'set list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         filesystem) COMPREPLY=($(compgen -W 'init enable disable reset refresh status list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         report)   COMPREPLY=($(compgen -W 'list'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         device)   COMPREPLY=($(compgen -W "enable disable reset refresh list status" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case ${COMP_WORDS[1]} in
+         class) case ${COMP_WORDS[2]} in
+                    create) if [ $COMP_CWORD = 3 ]
+                            then
+                               COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                               case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                 --fileset) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[3]} )" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 --class) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 *) COMPREPLY=($(compgen -W "--fileset --class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac
+                            fi;;
+                    update) if [ $COMP_CWORD = 3 ]
+                            then
+                               COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                               case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                 --fileset) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[3]} )" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 --class) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 *) COMPREPLY=($(compgen -W "--add --remove --replace --fileset --class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac
+                            fi;;
+                    delete) if [ $COMP_CWORD = 3 ]
+                            then
+                               COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                            else
+                               case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                 --class) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 *) COMPREPLY=($(compgen -W "--class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac
+                            fi;;
+                    set) if [ $COMP_CWORD = 3 ]
+                         then
+                            COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                         else
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --class) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--fileset --class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac
+                         fi;;
+                    list) if [ $COMP_CWORD = 3 ]
+                          then
+                             COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                              COMPREPLY=($(compgen -W "-Y --config" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          fi;;
+                esac;;
+         throttle) case ${COMP_WORDS[2]} in
+                    create) case "$COMP_CWORD" in
+                              3) COMPREPLY=($(compgen -W "$(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "--pool" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              5) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[3]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              6) COMPREPLY=($(compgen -W "--class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              7) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --maxIOPS) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --maxMBS) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --maxBurstTime) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -C) COMPREPLY=($(compgen -W "$(_remote_clusters) all all_local all_remote" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "-N --maxIOPS --maxMBS --maxBurstTime --force -C" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                            esac;;
+                    update) case "$COMP_CWORD" in
+                              3) COMPREPLY=($(compgen -W "$(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "--pool" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              5) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[3]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              6) COMPREPLY=($(compgen -W "--class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              7) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    --maxIOPS) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --maxMBS) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    --maxBurstTime) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -C) COMPREPLY=($(compgen -W "$(_remote_clusters) all all_local all_remote" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "-N --maxIOPS --maxMBS --maxBurstTime --force -C" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                            esac;;
+                    delete) case "$COMP_CWORD" in
+                              3) COMPREPLY=($(compgen -W "$(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              4) COMPREPLY=($(compgen -W "--pool" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              5) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[3]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              6) COMPREPLY=($(compgen -W "--class" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              7) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                    -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    -C) COMPREPLY=($(compgen -W "$(_remote_clusters) all all_local all_remote" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                    *) COMPREPLY=($(compgen -W "-N -C" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                            esac;;
+                    list) if [ $COMP_CWORD = 3 ]
+                          then
+                             COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --pool) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[3]} )" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --class) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--pool --class -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac
+                          fi;;
+                esac;;
+         config) case ${COMP_WORDS[2]} in
+                    set) if [ $COMP_CWORD = 3 ]
+                          then
+                             COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             COMPREPLY=($(compgen -W "Attribute=" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          fi;;
+                    list) if [ $COMP_CWORD = 3 ]
+                          then
+                             COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          fi;;
+                esac;;
+         filesystem) case ${COMP_WORDS[2]} in
+                       init) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       enable) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       disable) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       reset)COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       refresh) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       list) COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       status) if [ $COMP_CWORD = 3 ]
+                              then
+                                 COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                              else
+                                 COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"))
+                              fi;;
+                    esac;;
+         report) case ${COMP_WORDS[2]} in
+                    list) if [ $COMP_CWORD = 3 ]
+                          then
+                             COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else
+                             case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --pool-name) COMPREPLY=($(compgen -W "$(_fs_pools ${COMP_WORDS[3]}) all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --seconds) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --fine-stats-display-range) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sum-classes) COMPREPLY=($(compgen -W "yes no" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               --sum-nodes) COMPREPLY=($(compgen -W "yes no" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--pool-name --seconds --fine-stats-display-range --sum-classes --sum-nodes -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac
+                          fi;;
+                 esac;;
+         device) case "${COMP_WORDS[2]}" in
+                   enable) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   disable) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   reset) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   refresh) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   list) COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                   status) COMPREPLY=($(compgen -W "$(_localfs_names) -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                esac;;
+      esac;;  
+  esac
+}
+complete -F _mmqos_completion mmqos

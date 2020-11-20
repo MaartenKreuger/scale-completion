@@ -1,0 +1,39 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmbackup_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -f -o dirnames -W "$(_fs_names)" -- "${COMP_WORDS[1]}"));;
+    *) case "${COMP_WORDS[COMP_CWORD-1]}" in
+         -t) COMPREPLY=($(compgen -W "full incremental" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -g|-s) COMPREPLY=($(compgen -f -o dirnames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -S) COMPREPLY=($(compgen -W "$(_fs_snapshots ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -a|-n|-m) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --expire-threads) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --backup-threads) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --selective-backup-threads) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --incremental-backup-threads) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -B) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --max-backup-count) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --max-incremental-backup-count) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --max-selective-backup-count) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --max-expire-count) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --max-backup-size) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --qos) COMPREPLY=($(compgen -W "$(_qos_classes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --scope) COMPREPLY=($(compgen -W "filesystem inodespace" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --tsm-servers) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -L) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         --tsm-errorlog|-P) COMPREPLY=($(compgen -f -o filenames  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W '-t -N -g -s -S -f -q -v -d -a -n -m --expire-threads --backup-threads --selective-backup-threads --incremental-backup-threads -B --max-backup-count --max-incremental-backup-count --max-selective-backup-count --max-expire-count --max-backup-size --qos --quote --noquote --rebuild --scope --backup-migrated --skip-migrated --tsm-servers --tsm-errorlog -L -P' -- "${COMP_WORDS[COMP_CWORD]}"));;
+     esac;;
+  esac
+}
+complete -F _mmbackup_completion mmbackup

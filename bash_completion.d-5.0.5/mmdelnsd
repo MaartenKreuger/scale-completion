@@ -1,0 +1,20 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmdelnsd_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    3) case "${COMP_WORDS[1]}" in 
+         -p) COMPREPLY=($(compgen -W "$_nsdid_free" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         *) COMPREPLY=($(compgen -W "$(_nsd_free) -F -p" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) COMPREPLY=($(compgen -W "$(_nsd_free) -F -p -N" -- "${COMP_WORDS[COMP_CWORD]}"));;
+  esac
+}
+complete -F _mmdelnsd_completion mmdelnsd
