@@ -8,4 +8,4 @@ Where possible options are filled in with valid responses or GPFS objects like f
 
 For RedHat/Suse Users: Download the appropriate GPFS level RPM and install it.
 
-For Ubuntu users: You know how to use git. 
+For Ubuntu users: You know how to git. 
