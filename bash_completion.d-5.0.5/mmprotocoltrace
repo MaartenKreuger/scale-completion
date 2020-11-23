@@ -1,0 +1,36 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/MaartenKreuger/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmprotocoltrace_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'start stop status clear reset config'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case "${COMP_WORDS[1]}" in
+          stop) COMPREPLY=($(compgen -W "smb network smbsyscalls winbind" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          status) COMPREPLY=($(compgen -W "-v smb network smbsyscalls winbind" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          clear) COMPREPLY=($(compgen -W "-f smb network smbsyscalls winbind" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          reset) COMPREPLY=($(compgen -W "smb network smbsyscalls winbind" -- "${COMP_WORDS[COMP_CWORD]}"));;
+          config) return 0;;
+          start) if [ $COMP_CWORD = 2 ]
+                 then
+                    COMPREPLY=($(compgen -W "smb network smbsyscalls winbind" -- "${COMP_WORDS[COMP_CWORD]}"))
+                 else
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                       -N) COMPREPLY=($(compgen -W "$(_ces_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       -c) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       -d) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       -l) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       -N) COMPREPLY=($(compgen -W "$(_nodes)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       *) COMPREPLY=($(compgen -W "-c -d -l -N -f"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac
+                 fi;;
+       esac;;
+  esac
+}
+complete -F _mmprotocoltrace_completion mmprotocoltrace
