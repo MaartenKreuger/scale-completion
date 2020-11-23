@@ -13,7 +13,7 @@ _mmhealth_completion() {
     3) case ${COMP_WORDS[1]} in
          node) COMPREPLY=($(compgen -W 'show eventlog'  -- "${COMP_WORDS[COMP_CWORD]}"));;
          cluster) COMPREPLY=($(compgen -W 'show'  -- "${COMP_WORDS[COMP_CWORD]}"));;
-         event) COMPREPLY=($(compgen -W 'show list hide unhide'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         event) COMPREPLY=($(compgen -W 'resolve show list hide unhide'  -- "${COMP_WORDS[COMP_CWORD]}"));;
          thresholds) COMPREPLY=($(compgen -W 'show list add delete'  -- "${COMP_WORDS[COMP_CWORD]}"));;
          config) COMPREPLY=($(compgen -W 'interval'  -- "${COMP_WORDS[COMP_CWORD]}"));;
        esac;;
@@ -37,6 +37,7 @@ _mmhealth_completion() {
                esac;;
          event) case ${COMP_WORDS[2]} in
                   list) COMPREPLY=($(compgen -W 'HIDDEN' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  resolve) COMPREPLY=($(compgen -W 'EventName EntityName' -- "${COMP_WORDS[COMP_CWORD]}"));;
                   hide) COMPREPLY=($(compgen -W 'EventName EntityName' -- "${COMP_WORDS[COMP_CWORD]}"));;
                   unhide) COMPREPLY=($(compgen -W 'EventName EntityName' -- "${COMP_WORDS[COMP_CWORD]}"));;
                   show) case "${COMP_WORDS[COMP_CWORD-1]}" in
