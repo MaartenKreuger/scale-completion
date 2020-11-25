@@ -13,6 +13,14 @@ _all_callbacks()
 {
    echo $(/usr/lpp/mmfs/bin/mmlscallback all | grep '^[a-zA-Z0-9]')
 }
+_gateway_nodes()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster -Y | grep -v HEADER  | grep gateway | awk -F ':' '{ print $8 }')
+}
+_cloudgateway_nodes()
+{
+   echo $(/usr/lpp/mmfs/bin/mmlscluster -Y | grep -v HEADER | grep -i cloudgateway | awk -F ':' '{ print $8 }')
+}
 _manager_nodes()
 {
    echo $(/usr/lpp/mmfs/bin/mmlscluster -Y | grep Manager | awk -F ':' '{ print $8 }')
@@ -86,7 +94,7 @@ _unlinked_fileset_names()
 }
 _fileset_names()
 {
-  echo $(/usr/lpp/mmfs/bin/mmlsfileset $1 | grep -vw '^root' | awk '{ print $1 }' | tr '\n' ' ')
+  echo $(/usr/lpp/mmfs/bin/mmlsfileset $1 | tail -n +3 | grep -vw '^root' | awk '{ print $1 }' | tr '\n' ' ')
 }
 _fileset_junction()
 {
@@ -148,4 +156,23 @@ _fs_fgs()
 {
     /usr/lpp/mmfs/bin/mmlsdisk $1 -Y  | grep -v HEADER | awk -F ':' '{ print $10 }' | sort | uniq | tr '\n' ' ' 
 } 
+
+_list_kernels()
+{
+   if [ -x /usr/bin/rpm ]
+   then
+      /usr/bin/rpm -qa kernel | sed "s/^kernel-//" | tr '\n' ' '
+   else
+      if [ -x /usr/bin/dpkg ]
+      then
+         /usr/bin/dpkg --list | grep linux-image | awk '{ print $3 }' | tr '\n' ' '
+      else
+         echo
+      fi
+   fi
+}
+_list_nics()
+{
+   ip link show | grep "^[0-9]" | awk -F ':' '{ print $2 }' | grep -vw lo | tr '\n' ' '
+}
 
