@@ -53,7 +53,7 @@ _mmwatch_completion()
                           --sink_topic) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
                           --sink-auth-config) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
                           --sec-sink-fileset) COMPREPLY=($(compgen -W "$_linked_filesets ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
-                          *) COMPREPLY=($(compgen -W "--fileset --watch-id WatchID --events --event-handler --sink-brokers --sink-topic --sink-auth-config --secondary-sink --sec-sink-fileset --degraded" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          *) COMPREPLY=($(compgen -W "--fileset --watch-id --events --event-handler --sink-brokers --sink-topic --sink-auth-config --secondary-sink --sec-sink-fileset --degraded" -- "${COMP_WORDS[COMP_CWORD]}"));;
                        esac;;
           esac;;
      esac;;
