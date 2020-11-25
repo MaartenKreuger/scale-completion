@@ -1,0 +1,37 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmafmcosctl_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    4) COMPREPLY=($(compgen -o plusdirs -W "$(_fileset_junction ${COMP_WORDS[1]} ${COMP_WORDS[2]})/" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    5) COMPREPLY=($(compgen -W "download upload evict" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case ${COMP_WORDS[4]} in
+          download) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                       --object-list) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       --uid) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       --gid) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       --perm) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       --prefix) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       *) COMPREPLY=($(compgen -W "--object-list --all --metadata --data --no-sub-dir --prefix --perm --uid --gid --perm" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    esac;;
+          upload) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                       --object-list) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       *) COMPREPLY=($(compgen -W "--object-list --all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 esac;;
+          evict) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    --object-list) COMPREPLY=($(compgen --f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W "--object-list --all --metadata" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                 esac;;
+      esac;;
+  esac
+}
+complete -F _mmafmcosctl_completion mmafmcosctl

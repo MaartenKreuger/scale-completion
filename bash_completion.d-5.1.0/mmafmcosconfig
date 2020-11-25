@@ -1,0 +1,43 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmafmcosconfig_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    4) COMPREPLY=($(compgen -W "--endpoint --report" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case ${COMP_WORDS[3]} in
+          --report) return 0;;
+          --endpoint) if [ $COMP_CWORD -eq 4 ]
+                     then 
+                        COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"))
+                     else
+                        case "${COMP_WORDS[COMP_CWORD-1]}" in
+                          --bucket) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --new-bucket) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --dir) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --policy) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --tmpdir) COMPREPLY=($(compgen -f -o dirnames -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --tmpfile) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --quota-files) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --quota-blocks) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --uid) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --gid) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --perm) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --mode) COMPREPLY=($(compgen -W "IW SW RO LU" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --chunk-size) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          --read-size) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                          *) COMPREPLY=($(compgen -W "--object-fs --bucket --new-bucket --dir --policy --tmpdir --tmpfile --quota-files --quota-blocks --uid --gid --perm --mode --chunk-size --read-size --acls --vhb --gcs --cleanup --xattr --ssl-cert-verify --user-keys " -- "${COMP_WORDS[COMP_CWORD]}"));;
+                        esac
+                     fi;;
+      esac;;
+  esac
+}
+complete -F _mmafmcosconfig_completion mmafmcosconfig

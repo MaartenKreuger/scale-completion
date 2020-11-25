@@ -1,0 +1,45 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmafmcosaccess_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "$(_localfs_names)" -- "${COMP_WORDS[1]}"));;
+    3) COMPREPLY=($(compgen -W "$(_linked_fileset_names ${COMP_WORDS[1]})" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    4) COMPREPLY=($(compgen -o plusdirs -W "$(_fileset_junction ${COMP_WORDS[1]} ${COMP_WORDS[2]})/" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    5) COMPREPLY=($(compgen -W "set get delete" -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case ${COMP_WORDS[4]} in
+          set) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  --bucket) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --endpoint) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --akey) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --skey) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --keyfile) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W "--bucket --endpoint --akey --skey --keyfile" -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+          get) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  --bucket) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --endpoint) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --akey) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --skey) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --keyfile) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W "--report --bucket --endpoint --akey --skey --keyfile" -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+          delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                  --bucket) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --endpoint) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --akey) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --skey) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  --keyfile) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  *) COMPREPLY=($(compgen -W "--bucket --endpoint --akey --skey --keyfile" -- "${COMP_WORDS[COMP_CWORD]}"));;
+               esac;;
+      esac;;
+  esac
+}
+complete -F _mmafmcosaccess_completion mmafmcosaccess

@@ -1,0 +1,101 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmcesdr_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'primary secondary'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case "${COMP_WORDS[1]}" in
+         primary) COMPREPLY=($(compgen -W 'config backup restore update failback'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         secondary) COMPREPLY=($(compgen -W 'config failover failback '  -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case "${COMP_WORDS[1]}" in
+          primary) case "${COMP_WORDS[2]}" in
+                      backup) COMPREPLY=($(compgen -W "-v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                      update) COMPREPLY=($(compgen -W "--obj --nfs --smb --ces -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                      config) case $COMP_CWORD in
+                                3) COMPREPLY=($(compgen -W "--output-file-path" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                4) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                5) COMPREPLY=($(compgen -W "--ip-list" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                6) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                *) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                     --rpo) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     --allowed-nfs-clients) COMPREPLY=($(compgen -W "--all --gateway-nodes IPaddress" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                     *) COMPREPLY=($(compgen -W "--rpo --inband -v --allowed-nfs-clients"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   esac;;
+                               esac;;
+                      restore) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                   --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   --file-config) COMPREPLY=($(compgen -W "--recreate --restore" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                   *) COMPREPLY=($(compgen -W "--new-primary --input-file-path --file-config -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               esac;;
+                      failback) if [ $COMP_CWORD -eq 3 ]
+                                then
+                                   COMPREPLY=($(compgen -W "--prep-outband-transfer --convert-new --start --stop --apply-updates" -- "${COMP_WORDS[COMP_CWORD]}"))
+                                else
+                                   case "${COMP_WORDS[3]}" in
+                                      --prep-outband-transfer) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                                                  --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                  *) COMPREPLY=($(compgen -W "--input-file-path -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                               esac;;
+                                      --convert-new)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                                         --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                         --output-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                         *) COMPREPLY=($(compgen -W "--input-file-path --output-file-path -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                      esac;;
+                                      --start|--stop|--apply-updates) if [ "${COMP_WORDS[3]}" = "--stop" ]
+                                                                      then
+                                                                         addoption="--force"
+                                                                      else 
+                                                                         addoption=
+                                                                      fi 
+                                                                      case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                                                         --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                         *) COMPREPLY=($(compgen -W "--input-file-path $addoption -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                      esac;;
+                                    esac
+                                fi;;
+                   esac;;
+          secondary) case "${COMP_WORDS[2]}" in
+                        config) case "$COMP_CWORD" in
+                                  3) COMPREPLY=($(compgen -W "--input-file-path" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  4) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                  *) COMPREPLY=($(compgen -W "--prep-outband-transfer --inband -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                esac;;
+                        failover) case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                      --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                      --file-config) COMPREPLY=($(compgen -W "--recreate --restore" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                      --data) COMPREPLY=($(compgen -W "--restore --norestore" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                      *) COMPREPLY=($(compgen -W "--data --input-file-path --file-config -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                 esac;;
+                        failback) if [ $COMP_CWORD -eq 3 ]
+                                  then
+                                     COMPREPLY=($(compgen -W "--generate-recovery-snapshots --post-failback-complete" -- "${COMP_WORDS[COMP_CWORD]}"))
+                                  else
+                                     case "${COMP_WORDS[3]}" in
+                                        --generate-recovery-snapshots) case "$COMP_CWORD" in
+                                                                         4) COMPREPLY=($(compgen -W "--output-file-path" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                         5) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                         *)  case  "${COMP_WORDS[COMP_CWORD-1]}" in
+                                                                               --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                               *) COMPREPLY=($(compgen -W "--input-file-path -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                             esac;;
+                                                                       esac;;
+                                        --post-failback-complete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                                                    --input-file-path) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                    --file-config) COMPREPLY=($(compgen -W "--recreate --restore" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                    *) COMPREPLY=($(compgen -W "--new-primary --input-file-path --file-config -v"  -- "${COMP_WORDS[COMP_CWORD]}"));;
+                                                                  esac;;
+                                     esac
+                                 fi
+                     esac;;
+      esac;;
+   esac
+}
+complete -F _mmcesdr_completion mmcesdr

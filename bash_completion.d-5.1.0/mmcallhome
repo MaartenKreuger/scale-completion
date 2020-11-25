@@ -1,0 +1,116 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmcallhome_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'capability group info proxy run schedule status test'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+    3) case ${COMP_WORDS[1]} in
+         capability) COMPREPLY=($(compgen -W 'list enable disable'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         group) COMPREPLY=($(compgen -W 'list delete auto'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         info)   COMPREPLY=($(compgen -W 'list change'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         proxy) COMPREPLY=($(compgen -W 'list enable disable change'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         run)   COMPREPLY=($(compgen -W 'GatherSend SendFile'  -- "${COMP_WORDS[COMP_CWORD]}"));;
+         schedule)   COMPREPLY=($(compgen -W "list add delete" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+         status)   COMPREPLY=($(compgen -W "list delete" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         test)   COMPREPLY=($(compgen -W "connection" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case ${COMP_WORDS[1]} in
+         capability) case ${COMP_WORDS[2]} in
+                       list) COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       enable) COMPREPLY=($(compgen -W "LICENSE ACCEPT" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac;;
+         group) case ${COMP_WORDS[2]} in
+                  add) if [ $COMP_CWORD -eq 3 ] 
+                       then 
+                          COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"))
+                       else
+                          if [ $COMP_CWORD -eq 4 ]
+                          then
+                             COMPREPLY=($(compgen -W "server" -- "${COMP_WORDS[COMP_CWORD]}"))
+                          else 
+                             case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --node) COMPREPLY=($(compgen -W "$(_nodes) all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--node" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac
+                          fi
+                      fi;;
+                  list) COMPREPLY=($(compgen -W "--long -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  delete) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  auto) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                          --server) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --group-names) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --nodes) COMPREPLY=($(compgen -W "$(_nodes) all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --enable) COMPREPLY=($(compgen -W "LICENSE ACCEPT" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          *) COMPREPLY=($(compgen -W "--server --group-names --nodes --enable --disable --force " -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       esac;;
+                esac;; 
+         info) case ${COMP_WORDS[2]} in
+                list) COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                change) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                          --proxy-location) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --proxy-port) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --proxy-username) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --proxy-password) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          *) COMPREPLY=($(compgen -W "--proxy-location --proxy-port --proxy-username --proxy-password " -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       esac;;
+                esac;; 
+         proxy) case ${COMP_WORDS[2]} in
+                enable) COMPREPLY=($(compgen -W "--with-proxy-auth" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                disable) return 0;;
+                list) COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                change) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                          --proxy-location) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --proxy-port) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --proxy-username) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          --proxy-password) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          *) COMPREPLY=($(compgen -W "--proxy-location --proxy-port --proxy-username --proxy-password " -- "${COMP_WORDS[COMP_CWORD]}"));;
+                       esac;;
+                esac;; 
+         run) case ${COMP_WORDS[2]} in
+                GatherSend) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              --task) COMPREPLY=($(compgen -W "DAILY WEEKLY" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "--task" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+                SendFile) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              --file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --desc) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              --pmr) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                              *) COMPREPLY=($(compgen -W "--file --desc --pmr" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            esac;;
+             esac;; 
+         schedule) case ${COMP_WORDS[2]} in
+                     list) COMPREPLY=($(compgen -W "-Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     add) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                            --task) COMPREPLY=($(compgen -W "DAILY WEEKLY" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            *) COMPREPLY=($(compgen -W "--task" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                         esac;;
+                     delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                               --task) COMPREPLY=($(compgen -W "DAILY WEEKLY" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                               *) COMPREPLY=($(compgen -W "--task" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             esac;;
+                  esac;; 
+         status) case ${COMP_WORDS[2]} in
+                    list) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                            --task) COMPREPLY=($(compgen -W "DAILY WEEKLY SENDFILE SENDPMRDATA" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            --numbers) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                            *) COMPREPLY=($(compgen -W "--task --numbers --verbose -Y" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                   delete) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                             --task) COMPREPLY=($(compgen -W "DAILY WEEKLY SENDFILE SENDPMRDATA" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             --startTime) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             --startTimeBefore) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                             *) COMPREPLY=($(compgen -W "--task --startTime --startTimeBefore --all" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                          esac;;
+                esac;;
+         test) COMPREPLY=($(compgen -W "connection" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+  esac
+}
+complete -F _mmcallhome_completion mmcallhome

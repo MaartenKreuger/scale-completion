@@ -1,0 +1,35 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmchnode_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) if [ "${COMP_WORDS[1]}" = '-S' ] || [ "${COMP_WORDS[1]}" = '--spec-file' ]
+       then
+          COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"))
+       else
+          COMPREPLY=($(compgen -W '-S --spec-file --admin-interface= --client --cloud-gateway-enable --cloud-gateway-disable --ces-enable --ces-disable --ces-group= --noces-group= --cnfs-disable --cnfs-enable --cnfs-groupid= --cnfs-interface= --daemon-interface= --gateway --nogateway --manager  --nomanager --nonquorum  --perfmon --noperfmon  --quorum  --snmp-agent'   -- "${COMP_WORDS[1]}"))
+        fi;;
+    *) if [ "${COMP_WORDS[1]}" = '-S' ]  || [ "${COMP_WORDS[1]}" = '--spec-file' ]
+       then
+          case "${COMP_WORDS[COMP_CWORD-1]}" in
+             -S) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+             --spec-file) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));;
+             *)  COMPREPLY=($(compgen -W '-S --spec-file' -- "${COMP_WORDS[COMP_CWORD]}"));;
+          esac
+       else      
+         case "${COMP_WORDS[COMP_CWORD-1]}" in
+           -N) COMPREPLY=($(compgen -W "$(_nodes;_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           --cloud-gateway-nodeclass) ($(compgen -W "$(_nodeclasses)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+           *) COMPREPLY=($(compgen -W '-N --cloud-gateway-nodeclass' -- "${COMP_WORDS[COMP_CWORD]}"));;
+         esac
+      fi;;
+  esac
+}
+complete -F _mmchnode_completion mmchnode

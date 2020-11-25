@@ -1,0 +1,39 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmlsquota_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) case "${COMP_WORDS[1]}" in
+         -j) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;
+         -d) return 0;;
+         *) COMPREPLY=($(compgen -W "-u -g -v -q -e -C -Y --block-size $(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+       esac;;
+    *) case "${COMP_WORDS[1]}" in
+          -j) case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                -C) COMPREPLY=($(compgen -W "$(remote_clusters) ." -- "${COMP_WORDS[COMP_CWORD]}"));;
+                --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                *) COMPREPLY=($(compgen -W "-v -q -e -C -Y --block-size $(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+          -d) case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                -C) COMPREPLY=($(compgen -W "$(remote_clusters) ." -- "${COMP_WORDS[COMP_CWORD]}"));;
+                --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                *) COMPREPLY=($(compgen -W "-u -g -j -C -Y --block-size $(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+          *)  case "${COMP_WORDS[COMP_CWORD-1]}" in 
+                -C) COMPREPLY=($(compgen -W "$(remote_clusters) ." -- "${COMP_WORDS[COMP_CWORD]}"));;
+                --block-size) COMPREPLY=($(compgen -W "auto 1T 1G 1M 1K" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                -u) COMPREPLY=($(compgen -W "userName" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                -g) COMPREPLY=($(compgen -W "groupName" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                *) COMPREPLY=($(compgen -W "-u -g -v -q -e -C -Y --block-size $(_fs_names)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+              esac;;
+       esac;;
+  esac
+}
+complete -F _mmlsquota_completion mmlsquota

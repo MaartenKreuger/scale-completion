@@ -1,0 +1,68 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmremotefs_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W 'add update delete show' -- "${COMP_WORDS[COMP_CWORD]}"));;
+    *) case ${COMP_WORDS[1]} in
+          add) if [ $COMP_CWORD -eq 2 ] 
+               then 
+                    COMPREPLY=($(compgen -W 'LocalDevice' -- "${COMP_WORDS[COMP_CWORD]}"))
+               else 
+                  case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    -f) COMPREPLY=($(compgen -W "RemoteDevice" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                    -C) COMPREPLY=($(compgen -W "$(_remote_clusters)" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                    -T) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                    -t) COMPREPLY=($(compgen -W "D E F G H I J K L M N O P Q R S T U V W X Y Z" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                    -A) COMPREPLY=($(compgen -W "yes no automount" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                    -o) COMPREPLY=($(compgen -W "rw ro atime noatime mtime nomtime relatime nosyncnfs syncnfs" -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                    --mount-priority) COMPREPLY=($(compgen -W "1 2 3 4 5 6 7 8 9" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) COMPREPLY=($(compgen -W '-f -C -T -t -A -o --mount-priority' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                  esac
+               fi;;
+          update) if [ $COMP_CWORD -eq 2 ]
+                  then
+                      COMPREPLY=($(compgen -W "$(_remote_devices)" -- "${COMP_WORDS[COMP_CWORD]}"))
+                  else
+                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        -f) COMPREPLY=($(compgen -W "RemoteDevice" -- "${COMP_WORDS[COMP_CWORD]}"));;    
+                        -C) COMPREPLY=($(compgen -W "$(_remote_clusters)" -- "${COMP_WORDS[COMP_CWORD]}"));;    
+                        -T) COMPREPLY=($(compgen -W "" -- "${COMP_WORDS[COMP_CWORD]}"));;    
+                        -t) COMPREPLY=($(compgen -W "D E F G H I J K L M N O P Q R S T U V W X Y Z" -- "${COMP_WORDS[COMP_CWORD]}"));;    
+                        -A) COMPREPLY=($(compgen -W "yes no automount" -- "${COMP_WORDS[COMP_CWORD]}"));;    
+                        -o) COMPREPLY=($(compgen -W "rw ro atime noatime mtime nomtime relatime nosyncnfs syncnfs" -- "${COMP_WORDS[COMP_CWORD]}"));;    
+                        --mount-priority) COMPREPLY=($(compgen -W "1 2 3 4 5 6 7 8 9" -- "${COMP_WORDS[COMP_CWORD]}"));;
+
+                        *) COMPREPLY=($(compgen -W '-f -T -t -A -p --mount-priority -C' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac
+                  fi;;
+          delete) if [ $COMP_CWORD -eq 2 ]
+                  then
+                      COMPREPLY=($(compgen -W "$(_remote_devices) all" -- "${COMP_WORDS[COMP_CWORD]}"))
+                  else 
+                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        -C) COMPREPLY=($(compgen -W "$(_remote_clusters)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                        *) COMPREPLY=($(compgen -W '--force -C' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac
+                  fi;;
+          show) if [ $COMP_CWORD -eq 2 ]
+                  then
+                      COMPREPLY=($(compgen -W "$(_remote_devices) all -C" -- "${COMP_WORDS[COMP_CWORD]}"))
+                  else
+                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        -C) COMPREPLY=($(compgen -W "$(_remote_clusters)" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                        *) COMPREPLY=($(compgen -W '-Y' -- "${COMP_WORDS[COMP_CWORD]}"));;
+                     esac
+                  fi;;
+          *) COMPREPLY=($(compgen -W "Unsupported_option:${COMP_WORDS[1]}" -- "${COMP_WORDS[COMP_CWORD]}"));;  
+     esac;;
+  esac
+}
+complete -F _mmremotefs_completion mmremotefs

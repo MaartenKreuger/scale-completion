@@ -1,0 +1,34 @@
+#
+# Spectrum Scale v5.0 bash completion scripts
+# Author: Maarten Kreuger (maarten_kreuger@nl.ibm.com)
+# Download from github: github.com/scale-completion
+# Available using MIT License
+# Copyright IBM 2020
+#
+
+_mmafmcoskeys_completion()
+{
+  COMPREPLY=()
+  case "${#COMP_WORDS[@]}" in
+    2) COMPREPLY=($(compgen -W "all bucketName" -- "${COMP_WORDS[1]}"));;
+    *) case ${COMP_WORDS[1]} in
+          all) case $COMP_CWORD in
+                    2) COMPREPLY=($(compgen -W "get" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    3) COMPREPLY=($(compgen -W "--report" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                    *) return 0;;
+                 esac;;
+          *) case $COMP_CWORD in
+                2) COMPREPLY=($(compgen -W "get set delete" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                *) case ${COMP_WORDS[2]} in
+                      get) return 0;;
+                      delete) return 0;;
+                      set) case "${COMP_WORDS[COMP_CWORD-1]}" in
+                              --keyfile) COMPREPLY=($(compgen -f -o filenames -- "${COMP_WORDS[COMP_CWORD]}"));; 
+                              *) COMPREPLY=($(compgen -W "accesKey secretKey --keyfile" -- "${COMP_WORDS[COMP_CWORD]}"));;
+                           esac;;
+                   esac;;
+              esac;;
+      esac;;
+  esac
+}
+complete -F _mmafmcoskeys_completion mmafmcoskeys
